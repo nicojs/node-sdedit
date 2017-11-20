@@ -1,0 +1,47 @@
+{
+  "name": "sdedit",
+  "version": "0.0.0",
+  "description": "A wrapper to use sdedit via nodejs",
+  "main": "src/index.js",
+  "typings": "src/index.d.ts",
+  "scripts": {
+    "postinstall": "node bin/sdedit update",
+    "test": "nyc --check-coverage --reporter=html --report-dir=reports/coverage --lines 80 --functions 80 --branches 75 mocha \\\"test/**/*.js\\\""
+  },
+  "repository": {
+    "type": "git",
+    "url": "git+https://github.com/nicojs/node-sdedit.git"
+  },
+  "keywords": [
+    "sdedit",
+    "sequence",
+    "diagram",
+    "sddiagram"
+  ],
+  "bin": {
+    "sdedit": "./bin/sdedit"
+  },
+  "license": "Apache-2.0",
+  "author": "Nico Jansen <jansennico@gmail.com>",
+  "bugs": {
+    "url": "https://github.com/nicojs/node-sdedit/issues"
+  },
+  "homepage": "https://github.com/nicojs/node-sdedit#readme",
+  "devDependencies": {
+    "@types/chai": "^4.0.5",
+    "@types/mocha": "^2.2.44",
+    "@types/node": "^8.0.53",
+    "@types/sinon": "^4.0.0",
+    "@types/sinon-chai": "^2.7.29",
+    "chai": "^4.1.2",
+    "mocha": "^4.0.1",
+    "nyc": "^11.3.0",
+    "sinon": "^4.1.2",
+    "sinon-chai": "^2.14.0",
+    "source-map-support": "^0.5.0",
+    "typescript": "^2.6.1"
+  },
+  "dependencies": {
+    "download": "^6.2.5"
+  }
+}
