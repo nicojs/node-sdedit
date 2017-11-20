@@ -18,7 +18,7 @@ describe('Cli', function () {
     it('should generate a png when called with correct arguments', () => {
         const sdeditBin = path.resolve(__dirname, '..', '..', 'bin', 'sdedit');
         const sdExample = path.resolve(__dirname, '..', '..', 'testResources', 'example.sd');
-        childProcess.execSync(`node ${sdeditBin} run -o "${outputFile}" -t png "${sdExample}"`)
+        childProcess.execSync(`node ${sdeditBin} run -o "${outputFile}" -t png "${sdExample}"`);
         const outputStat = fs.statSync(outputFile);
         expect(outputStat.size).greaterThan(100);
     });

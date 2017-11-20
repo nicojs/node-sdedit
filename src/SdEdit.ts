@@ -16,7 +16,7 @@ export default class SdEdit {
             this.log(`[sdedit] Running '${cmd}'...`);
             childProcess.execSync(cmd);
         } else {
-            this.log(`[sdedit] Cannot find sdedit.jar. Please run \`sdedit update\` before running this command.`)
+            this.log(`[sdedit] Cannot find sdedit.jar. Please run \`sdedit update\` before running this command.`);
             throw new Error(`File not found '${sdeditJar}', please run \`sdedit update\`.`);
         }
     }

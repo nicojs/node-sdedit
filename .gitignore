@@ -8,3 +8,4 @@ test/**/*.d.ts
 .tscache
 sdedit-bin
 *.png
+.nyc_output

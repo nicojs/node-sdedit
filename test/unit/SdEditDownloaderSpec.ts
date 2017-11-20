@@ -31,8 +31,8 @@ describe('SdEditDownloader', () => {
         it('should ensure the install dir exists', () => {
             existsSyncStub.returns(false);
             statSyncStub.returns({ size: 1 });
-            const sdeditBin = path.resolve(__dirname, '..', '..','sdedit-bin');
-            
+            const sdeditBin = path.resolve(__dirname, '..', '..', 'sdedit-bin');
+
             const sut = new SdEditDownloader(false, log);
             sut.update();
 
@@ -43,8 +43,8 @@ describe('SdEditDownloader', () => {
         it('should skip download if the file already exists', () => {
             existsSyncStub.returns(false);
             statSyncStub.returns({ size: 1 });
-            const sdeditJar = path.resolve(__dirname, '..', '..','sdedit-bin', 'sdedit.jar');
-            
+            const sdeditJar = path.resolve(__dirname, '..', '..', 'sdedit-bin', 'sdedit.jar');
+
             const sut = new SdEditDownloader(false, log);
             sut.update();
             expect(log).calledWith(`[sdedit] File exists, update skipped: ${sdeditJar}. Use -f to override.`);
