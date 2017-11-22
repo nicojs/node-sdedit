@@ -5,8 +5,9 @@
   "main": "src/index.js",
   "typings": "src/index.d.ts",
   "scripts": {
-    "postinstall": "node bin/sdedit update",
-    "prebuild": "rimraf \"+(test|src)/**/*+(.d.ts|.js|.map)\" .nyc_output reports coverage",
+    "postinstall": "node sdeditIfInstalled.js update",
+    "clean": "rimraf \"+(test|src)/**/*+(.d.ts|.js|.map)\" .nyc_output reports coverage",
+    "prebuild": "npm run clean",
     "build": "tsc -p .",
     "postbuild": "tslint -p tsconfig.json",
     "pretest": "npm run build",
@@ -33,6 +34,8 @@
   "homepage": "https://github.com/nicojs/node-sdedit#readme",
   "devDependencies": {
     "@types/chai": "^4.0.5",
+    "@types/end-of-stream": "^1.4.0",
+    "@types/got": "^7.1.5",
     "@types/mocha": "^2.2.44",
     "@types/node": "^8.0.53",
     "@types/sinon": "^4.0.0",
@@ -47,6 +50,8 @@
     "typescript": "^2.6.1"
   },
   "dependencies": {
-    "download": "^6.2.5"
+    "download": "^6.2.5",
+    "end-of-stream": "^1.4.0",
+    "got": "^8.0.0"
   }
 }

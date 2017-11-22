@@ -1,0 +1,6 @@
+*
+!bin/**
+!src/**/*.js
+!src/**/*.d.ts
+!README.md
+!sdeditIfInstalled.js

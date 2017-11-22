@@ -8,10 +8,13 @@ export default class Cli {
     }
 
     public run(): void | Promise<void> {
-        if (this.args.length <= 2 || this.args.indexOf('--help') >= 0 || this.args.indexOf('-h') >= 0) {
+        if (this.args.length <= 2 || this.hasFlag('--help', '-h')) {
             this.printHelp();
         } else if (this.args[2] === 'update') {
-            return new SdEditDownloader(this.args.indexOf('--force') >= 0).update();
+            return Promise.resolve(new SdEditDownloader(this.hasFlag('-f', '--force')).update())
+                .catch((error: any) => {
+                    console.error('Download failed', error);
+                });
         } else if (this.args[2] === 'run') {
             new SdEdit(this.args.slice(3)).run();
         } else {
@@ -19,7 +22,11 @@ export default class Cli {
         }
     }
 
-    public printHelp() {
+    private hasFlag(...synonyms: string[]) {
+        return synonyms.some(syn => this.args.indexOf(syn) >= 0);
+    }
+
+    private printHelp() {
         const sdedit = path.basename(this.args[1]);
         const l = console.log;
 

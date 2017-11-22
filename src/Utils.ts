@@ -1,8 +1,15 @@
-const download = require('download');
+import endOfStream = require('end-of-stream');
 
 export default class Utils {
-
-    static download(downloadUrl: string, installDir: string, options: any): Promise<void> {
-        return download(downloadUrl, installDir, options);
+    static streamToPromise(stream: NodeJS.ReadableStream | NodeJS.WritableStream): Promise<void> {
+        return new Promise<void>((res, rej) => {
+            endOfStream(stream, error => {
+                if (error) {
+                    rej(error);
+                } else {
+                    res();
+                }
+            });
+        });
     }
 }
