@@ -27,7 +27,7 @@ export default class SdEditDownloader {
     }
 
     private download(downloadUrl: string, destination: string): Promise<void> {
-        return Utils.streamToPromise(got.stream(downloadUrl).pipe(fs.createWriteStream(destination));
+        return Utils.streamToPromise(got.stream(downloadUrl).pipe(fs.createWriteStream(destination)));
     }
 
     private isUpdateNeeded(): boolean {

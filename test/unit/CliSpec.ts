@@ -9,6 +9,7 @@ describe('Cli', () => {
     let sandbox: sinon.SinonSandbox;
     let sdEditMock: Mock<SdEdit>;
     let sdEditDownloaderMock: Mock<SdEditDownloader>;
+    let logStub: sinon.SinonStub;
 
     beforeEach(() => {
         sandbox = sinon.sandbox.create();
@@ -17,6 +18,7 @@ describe('Cli', () => {
         sandbox.stub(sdeditModule, 'default').returns(sdEditMock);
         sandbox.stub(sdEditDownloaderModule, 'default').returns(sdEditDownloaderMock);
         sdEditDownloaderMock.update.resolves();
+        logStub = sandbox.stub();
     });
 
     afterEach(() => {
@@ -25,7 +27,7 @@ describe('Cli', () => {
 
 
     it('should update', async () => {
-        const sut = new Cli(['node', 'sdedit', 'update']);
+        const sut = new Cli(logStub, ['node', 'sdedit', 'update']);
         await sut.run();
 
         expect(sdEditDownloaderModule.default).calledWith(false);
@@ -34,19 +36,19 @@ describe('Cli', () => {
     });
 
     it('should update with --force', async () => {
-        const sut = new Cli(['node', 'sdedit', 'update', '--force']);
+        const sut = new Cli(logStub, ['node', 'sdedit', 'update', '--force']);
         await sut.run();
         expect(sdEditDownloaderModule.default).calledWith(/*force*/ true);
     });
 
     it('should update with -f', async () => {
-        const sut = new Cli(['node', 'sdedit', 'update', '-f']);
+        const sut = new Cli(logStub, ['node', 'sdedit', 'update', '-f']);
         await sut.run();
         expect(sdEditDownloaderModule.default).calledWith(/*force*/ true);
     });
 
     it('should run sdedit with arguments', async () => {
-        const sut = new Cli(['node', 'sdedit', 'run', 'foo', 'bar']);
+        const sut = new Cli(logStub, ['node', 'sdedit', 'run', 'foo', 'bar']);
         await sut.run();
         expect(sdeditModule.default).calledWithNew;
         expect(sdeditModule.default).calledWith(['foo', 'bar']);
@@ -54,10 +56,16 @@ describe('Cli', () => {
     });
 
     it('should run sdedit without', async () => {
-        const sut = new Cli(['node', 'sdedit', 'run']);
+        const sut = new Cli(logStub, ['node', 'sdedit', 'run']);
         await sut.run();
         expect(sdeditModule.default).calledWithNew;
         expect(sdeditModule.default).calledWith([]);
         expect(sdEditMock.run).called;
+    });
+
+    it('should print help if called without args', async () => {
+        const sut = new Cli(logStub, ['node', 'sdedit']);
+        await sut.run();
+        expect(logStub).calledWith('Run Markus Strauch\'s sdedit (java tool).');
     });
 });

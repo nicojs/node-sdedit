@@ -4,4 +4,7 @@
 process.title = 'sdedit';
 
 const Cli = require('../src/Cli').default;
-new Cli(process.argv).run();
+new Cli(console.log, process.argv).run().catch(error => {
+    console.error('Command rejected.', error);
+    process.exitCode = 1;
+});

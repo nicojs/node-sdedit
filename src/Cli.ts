@@ -4,22 +4,20 @@ import SdEdit from './SdEdit';
 
 export default class Cli {
 
-    constructor(private args: string[]) {
+    constructor(private log: (message?: any, ...optionalParams: any[]) => void, private args: string[]) {
     }
-
-    public run(): void | Promise<void> {
+    
+    public run(): Promise<void> {
         if (this.args.length <= 2 || this.hasFlag('--help', '-h')) {
             this.printHelp();
         } else if (this.args[2] === 'update') {
-            return Promise.resolve(new SdEditDownloader(this.hasFlag('-f', '--force')).update())
-                .catch((error: any) => {
-                    console.error('Download failed', error);
-                });
+            return Promise.resolve(new SdEditDownloader(this.hasFlag('-f', '--force')).update());
         } else if (this.args[2] === 'run') {
             new SdEdit(this.args.slice(3)).run();
         } else {
             this.printHelp();
         }
+        return Promise.resolve();
     }
 
     private hasFlag(...synonyms: string[]) {
@@ -28,7 +26,7 @@ export default class Cli {
 
     private printHelp() {
         const sdedit = path.basename(this.args[1]);
-        const l = console.log;
+        const l = this.log;
 
         l();
         l('Run Markus Strauch\'s sdedit (java tool).');
