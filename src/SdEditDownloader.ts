@@ -9,13 +9,14 @@ export default class SdEditDownloader {
     constructor(private force: boolean, private log = console.log) {
     }
 
-    update(): void | Promise<void> {
+    update(): Promise<void> {
         this.ensureInstallDirExists();
         const updateNeeded = this.isUpdateNeeded();
         if (updateNeeded) {
             return this.downloadSdEdit()
                 .then(() => this.log('[sdedit] Download completed'));
         }
+        return Promise.resolve();
     }
 
     private downloadSdEdit(): Promise<void> {

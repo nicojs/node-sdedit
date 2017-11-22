@@ -1,7 +1,19 @@
+[![Build Status](https://travis-ci.org/nicojs/node-sdedit.svg?branch=master)](https://travis-ci.org/nicojs/node-sdedit)
+
 sdedit
 ===
 
 Generate sequence diagrams from clear text using sdedit, created by Markus Strauch, [http://sdedit.sourceforge.net/](http://sdedit.sourceforge.net/).
+
+## Install
+
+Install using
+
+```
+$ npm install sdedit
+```
+
+The sdedit.jar file is automatically installed in a post install step, but if that fails you can download it yourself using `sdedit update`.
 
 ## Dependencies
 
@@ -38,6 +50,20 @@ Examples:
 ```
 
 ### Programmatically
+
+You can use both the `SdEdit` class and `SdEditDownloader` classes to perform both `run` and `update` respectively:
+
+```javascript
+const SdEdit = require('sdedit').SdEdit;
+const SdEditDownloader = require('sdedit').SdEditDownloader;
+
+new SdEditDownloader(/*force*/ false)
+  .update()
+  .then(() => console.log('Done'))
+new SdEdit(['-o', '/tmp/sequence.png', '-t', 'png', '/tmp/examples/sequence.sd'])
+  .run()
+  .then(() => console.log('Done'));
+```
 
 ## TypeScript
 
