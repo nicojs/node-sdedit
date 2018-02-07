@@ -7,3 +7,6 @@ node_js:
 install: npm install
 before_install:
 - if [[ `npm -v` = 2* ]]; then npm i -g npm@3; fi
+env:
+  global:
+    secure: ApmKBVvzLdsBPzcf3DeGLnkasM1lDVAjmK5vDMl+g6gOBeW6ESthgSoMXpgh3J5SB27NCv0gePxK5zXNWsv5I4BMp+fNgsRRrrw8niz+9FII64LVKcj/1JntDRS3xdGZ9kCnmMoujE8D923VOJfFfy57epVIknThytO4mWUDvSbwOwk0T38BG/kOOUkrw0IRn8vmIlF2N7KtRfImj0OErbK0iJR01C6oel6oox3QNlZ+KWonuwbf9v82cRAYPHOgiYrERUUOTgVcITzouswMEqGJztRa3P33n5ESCWGozLeZ4nMqZ14KU25HhshRdr3oAkhOu+nCiHMyNAFTv8K9dwaWAnMnux8TYqbw9ljxXmF2siNDEmKiNeJxTsa5NvEbaK2rynp4atJEDavVz3nlRgWMvywXKKPSSw4A7cCSP3LaBhF8Asq6jOyeQfKXfund182EfGDPBT9GrJmm6MvBzciDGse7dmOK3WAXGcWH4TB2+CkX4VeARTWbh76x/9jLBa3wzD07GOkNaKopa/Md/e9lo5jz8dXEDhB3V8f3JZVndxv8Sua9cQVWFZo5qW3DWeIr/g0diLaU/lN+bzU+lPWFGL5Sx3CxhUR2733kh9LZX7aMuf5qaNrBaeJy8RVSH5d7v3DPmd/zNRp2fra9OfNSsHaURgqQZnKdEy5KXnw=
