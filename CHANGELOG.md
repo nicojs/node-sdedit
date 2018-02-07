@@ -1,3 +1,8 @@
+<a name="0.1.2"></a>
+## [0.1.2](https://github.com/nicojs/node-sdedit/compare/v0.1.1...v0.1.2) (2018-02-07)
+
+
+
 <a name="0.1.1"></a>
 ## [0.1.1](https://github.com/nicojs/node-sdedit/compare/d67b1bd...v0.1.1) (2017-11-22)
 
