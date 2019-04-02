@@ -61,9 +61,10 @@ const SdEditDownloader = require('sdedit').SdEditDownloader;
 new SdEditDownloader(/*force*/ false)
   .update()
   .then(() => console.log('Done'))
+
+// Executes synchronously
 new SdEdit(['-o', '/tmp/sequence.png', '-t', 'png', '/tmp/examples/sequence.sd'])
-  .run()
-  .then(() => console.log('Done'));
+  .run();
 ```
 
 ## TypeScript
