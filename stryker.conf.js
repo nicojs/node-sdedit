@@ -1,17 +1,19 @@
 module.exports = function(config) {
   config.set({
     files: [
-      '!src/**/*.d.ts',
-      '!test/**/*.d.ts',
-      '!test/integration/**/*.ts'
+      'sdedit-bin/**',
+      'bin/**',
+      'src/**',
+      'test/**',
+      'testResources/**'
     ],
     mutate: ["src/**/*.ts", '!src/**/*.d.ts'],
     testRunner: "mocha",
     mutator: "typescript",
     transpilers: ["typescript"],
-    reporter: ["html", "clear-text", "progress", "dashboard"],
+    reporters: ["html", "clear-text", "progress", "dashboard"],
     testFramework: "mocha",
-    coverageAnalysis: "off",
+    coverageAnalysis: "perTest",
     tsconfigFile: "tsconfig.json",
     thresholds: {
       break: 63,

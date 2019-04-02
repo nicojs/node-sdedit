@@ -7,7 +7,6 @@ import Utils from '../../src/Utils';
 import SdEditDownloader from '../../src/SdEditDownloader';
 
 describe('SdEditDownloader', () => {
-    let sandbox: sinon.SinonSandbox;
     let log: sinon.SinonStub;
     let existsSyncStub: sinon.SinonStub;
     let mkdirSyncStub: sinon.SinonStub;
@@ -21,26 +20,20 @@ describe('SdEditDownloader', () => {
     let createWriteStream: sinon.SinonStub;
 
     beforeEach(() => {
-        sandbox = sinon.sandbox.create();
-        log = sandbox.stub();
-        existsSyncStub = sandbox.stub(fs, 'existsSync');
+        log = sinon.stub();
+        existsSyncStub = sinon.stub(fs, 'existsSync');
         streamStub = {
-            pipe: sandbox.stub(),
-            on: sandbox.stub()
+            pipe: sinon.stub(),
+            on: sinon.stub()
         };
-        streamToPromiseStub = sandbox.stub(Utils, 'streamToPromise');
-        gotStreamStub = sandbox.stub(got, 'stream');
+        streamToPromiseStub = sinon.stub(Utils, 'streamToPromise');
+        gotStreamStub = sinon.stub(got, 'stream');
         gotStreamStub.returns(streamStub);
-        mkdirSyncStub = sandbox.stub(fs, 'mkdirSync');
-        statSyncStub = sandbox.stub(fs, 'statSync');
-        createWriteStream = sandbox.stub(fs, 'createWriteStream');
+        mkdirSyncStub = sinon.stub(fs, 'mkdirSync');
+        statSyncStub = sinon.stub(fs, 'statSync');
+        createWriteStream = sinon.stub(fs, 'createWriteStream');
         streamStub.pipe.returns('expected piped value');
     });
-
-    afterEach(() => {
-        sandbox.restore();
-    });
-
 
     describe('update', () => {
         it('should ensure the install dir exists', () => {

@@ -9,20 +9,14 @@ const sdeditJar = path.resolve(__dirname, '..', '..', 'sdedit-bin', 'sdedit.jar'
 
 describe('SdEdit', () => {
 
-    let sandbox: sinon.SinonSandbox;
     let execSyncStub: sinon.SinonStub;
     let log: sinon.SinonStub;
     let fsExistsSyncStub: sinon.SinonStub;
 
     beforeEach(() => {
-        sandbox = sinon.sandbox.create();
-        execSyncStub = sandbox.stub(childProcess, 'execSync');
-        log = sandbox.stub();
-        fsExistsSyncStub = sandbox.stub(fs, 'existsSync');
-    });
-    
-    afterEach(() => {
-        sandbox.restore();
+        execSyncStub = sinon.stub(childProcess, 'execSync');
+        log = sinon.stub();
+        fsExistsSyncStub = sinon.stub(fs, 'existsSync');
     });
 
     describe('run', () => {
