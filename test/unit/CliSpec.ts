@@ -1,28 +1,21 @@
 import * as sinon from 'sinon';
 import SdEditDownloader, * as sdEditDownloaderModule from '../../src/SdEditDownloader';
 import SdEdit, * as sdeditModule from '../../src/SdEdit';
-import { Mock, mock } from '../helpers/mock';
 import Cli from '../../src/Cli';
 import { expect } from 'chai';
 
 describe('Cli', () => {
-    let sandbox: sinon.SinonSandbox;
-    let sdEditMock: Mock<SdEdit>;
-    let sdEditDownloaderMock: Mock<SdEditDownloader>;
+    let sdEditMock: sinon.SinonStubbedInstance<SdEdit>;
+    let sdEditDownloaderMock: sinon.SinonStubbedInstance<SdEditDownloader>;
     let logStub: sinon.SinonStub;
 
     beforeEach(() => {
-        sandbox = sinon.sandbox.create();
-        sdEditMock = mock(SdEdit);
-        sdEditDownloaderMock = mock(SdEditDownloader);
-        sandbox.stub(sdeditModule, 'default').returns(sdEditMock);
-        sandbox.stub(sdEditDownloaderModule, 'default').returns(sdEditDownloaderMock);
+        sdEditMock = sinon.createStubInstance(SdEdit);
+        sdEditDownloaderMock = sinon.createStubInstance(SdEditDownloader);
+        sinon.stub(sdeditModule, 'default').returns(sdEditMock);
+        sinon.stub(sdEditDownloaderModule, 'default').returns(sdEditDownloaderMock);
         sdEditDownloaderMock.update.resolves();
-        logStub = sandbox.stub();
-    });
-
-    afterEach(() => {
-        sandbox.restore();
+        logStub = sinon.stub();
     });
 
 
