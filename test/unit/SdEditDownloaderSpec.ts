@@ -5,19 +5,20 @@ import * as fs from 'fs';
 import got = require('got');
 import Utils from '../../src/Utils';
 import SdEditDownloader from '../../src/SdEditDownloader';
+import { Duplex } from 'stream';
 
 describe('SdEditDownloader', () => {
     let log: sinon.SinonStub;
-    let existsSyncStub: sinon.SinonStub;
-    let mkdirSyncStub: sinon.SinonStub;
-    let gotStreamStub: sinon.SinonStub;
-    let statSyncStub: sinon.SinonStub;
+    let existsSyncStub: sinon.SinonStub<[fs.PathLike], boolean>;
+    let mkdirSyncStub: sinon.SinonStub<[fs.PathLike, (string | number | fs.MakeDirectoryOptions | null | undefined)?], void>;
+    let gotStreamStub: sinon.SinonStub<[got.GotUrl, (got.GotOptions<string | null> | undefined)?], got.GotEmitter & Duplex>;
+    let statSyncStub: sinon.SinonStub<[fs.PathLike], fs.Stats>;
     let streamStub: {
         pipe: sinon.SinonStub;
         on: sinon.SinonStub;
     };
-    let streamToPromiseStub: sinon.SinonStub;
-    let createWriteStream: sinon.SinonStub;
+    let streamToPromiseStub: sinon.SinonStub<[NodeJS.ReadableStream | NodeJS.WritableStream], Promise<void>>;
+    let createWriteStream: sinon.SinonStub<[fs.PathLike, (string | { flags?: string | undefined; encoding?: string | undefined; fd?: number | undefined; mode?: number | undefined; autoClose?: boolean | undefined; start?: number | undefined; } | undefined)?], fs.WriteStream>;
 
     beforeEach(() => {
         log = sinon.stub();
@@ -28,7 +29,7 @@ describe('SdEditDownloader', () => {
         };
         streamToPromiseStub = sinon.stub(Utils, 'streamToPromise');
         gotStreamStub = sinon.stub(got, 'stream');
-        gotStreamStub.returns(streamStub);
+        gotStreamStub.returns(streamStub as any);
         mkdirSyncStub = sinon.stub(fs, 'mkdirSync');
         statSyncStub = sinon.stub(fs, 'statSync');
         createWriteStream = sinon.stub(fs, 'createWriteStream');
@@ -38,7 +39,7 @@ describe('SdEditDownloader', () => {
     describe('update', () => {
         it('should ensure the install dir exists', () => {
             existsSyncStub.returns(false);
-            statSyncStub.returns({ size: 1 });
+            statSyncStub.returns({ size: 1 } as unknown as fs.Stats);
             const sdeditBin = path.resolve(__dirname, '..', '..', 'sdedit-bin');
 
             const sut = new SdEditDownloader(false, log);
@@ -50,7 +51,7 @@ describe('SdEditDownloader', () => {
 
         it('should skip download if the file already exists', () => {
             existsSyncStub.returns(false);
-            statSyncStub.returns({ size: 1 });
+            statSyncStub.returns({ size: 1 } as unknown as fs.Stats);
             const sdeditJar = path.resolve(__dirname, '..', '..', 'sdedit-bin', 'sdedit.jar');
 
             const sut = new SdEditDownloader(false, log);
@@ -86,7 +87,7 @@ describe('SdEditDownloader', () => {
         });
 
         it('should download if file is there but is 0 bytes', async () => {
-            statSyncStub.returns({ size: 0 });
+            statSyncStub.returns({ size: 0 } as unknown as fs.Stats);
             streamToPromiseStub.resolves();
             const sut = new SdEditDownloader(false, log);
             await sut.update();
@@ -95,7 +96,7 @@ describe('SdEditDownloader', () => {
 
         it('should download if file is there, but force = true', async () => {
             existsSyncStub.returns(false);
-            statSyncStub.returns({ size: 1 });
+            statSyncStub.returns({ size: 1 } as unknown as fs.Stats);
             streamToPromiseStub.resolves();
             const sut = new SdEditDownloader(true, log);
             await sut.update();

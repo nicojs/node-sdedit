@@ -9,9 +9,9 @@ const sdeditJar = path.resolve(__dirname, '..', '..', 'sdedit-bin', 'sdedit.jar'
 
 describe('SdEdit', () => {
 
-    let execSyncStub: sinon.SinonStub;
+    let execSyncStub: sinon.SinonStub<[string, (childProcess.ExecSyncOptions | undefined)?], Buffer>;
     let log: sinon.SinonStub;
-    let fsExistsSyncStub: sinon.SinonStub;
+    let fsExistsSyncStub: sinon.SinonStub<[fs.PathLike], boolean>;
 
     beforeEach(() => {
         execSyncStub = sinon.stub(childProcess, 'execSync');
