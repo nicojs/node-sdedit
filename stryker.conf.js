@@ -14,6 +14,9 @@ module.exports = function(config) {
     reporters: ["html", "clear-text", "progress", "dashboard"],
     testFramework: "mocha",
     coverageAnalysis: "perTest",
+    mochaOptions: {
+      spec: ['test/helpers/**/*.js', 'test/unit/**/*.js']
+    },
     tsconfigFile: "tsconfig.json",
     thresholds: {
       break: 63,
