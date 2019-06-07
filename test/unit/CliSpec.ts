@@ -5,6 +5,7 @@ import Cli from '../../src/Cli';
 import { expect } from 'chai';
 
 describe('Cli', () => {
+    
     let sdEditMock: sinon.SinonStubbedInstance<SdEdit>;
     let sdEditDownloaderMock: sinon.SinonStubbedInstance<SdEditDownloader>;
     let logStub: sinon.SinonStub;

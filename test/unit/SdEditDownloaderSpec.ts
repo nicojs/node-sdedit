@@ -5,23 +5,11 @@ import * as fs from 'fs';
 import got = require('got');
 import Utils from '../../src/Utils';
 import SdEditDownloader from '../../src/SdEditDownloader';
-import { Duplex } from 'stream';
 
 describe('SdEditDownloader', () => {
     let log: sinon.SinonStub;
-    let existsSyncStub: sinon.SinonStub<[fs.PathLike], boolean>;
-    let mkdirSyncStub: sinon.SinonStub<[fs.PathLike, (string | number | fs.MakeDirectoryOptions | null | undefined)?], void>;
-    let gotStreamStub: sinon.SinonStub<[got.GotUrl, (got.GotOptions<string | null> | undefined)?], got.GotEmitter & Duplex>;
-    let statSyncStub: sinon.SinonStub<[fs.PathLike], fs.Stats>;
-    let streamStub: {
-        pipe: sinon.SinonStub;
-        on: sinon.SinonStub;
-    };
-    let streamToPromiseStub: sinon.SinonStub<[NodeJS.ReadableStream | NodeJS.WritableStream], Promise<void>>;
-    let createWriteStream: sinon.SinonStub<[fs.PathLike, (string | { flags?: string | undefined; encoding?: string | undefined; fd?: number | undefined; mode?: number | undefined; autoClose?: boolean | undefined; start?: number | undefined; } | undefined)?], fs.WriteStream>;
 
-    beforeEach(() => {
-        log = sinon.stub();
+    class TestHelper {
         existsSyncStub = sinon.stub(fs, 'existsSync');
         streamStub = {
             pipe: sinon.stub(),
@@ -29,53 +17,62 @@ describe('SdEditDownloader', () => {
         };
         streamToPromiseStub = sinon.stub(Utils, 'streamToPromise');
         gotStreamStub = sinon.stub(got, 'stream');
-        gotStreamStub.returns(streamStub as any);
         mkdirSyncStub = sinon.stub(fs, 'mkdirSync');
         statSyncStub = sinon.stub(fs, 'statSync');
         createWriteStream = sinon.stub(fs, 'createWriteStream');
-        streamStub.pipe.returns('expected piped value');
+
+        constructor() {
+            this.gotStreamStub.returns(this.streamStub as any);
+            this.streamStub.pipe.returns('expected piped value');
+        }
+    }
+    let testHelper: TestHelper;
+
+    beforeEach(() => {
+        log = sinon.stub();
+        testHelper = new TestHelper();
     });
 
     describe('update', () => {
         it('should ensure the install dir exists', () => {
-            existsSyncStub.returns(false);
-            statSyncStub.returns({ size: 1 } as unknown as fs.Stats);
+            testHelper.existsSyncStub.returns(false);
+            testHelper.statSyncStub.returns({ size: 1 } as unknown as fs.Stats);
             const sdeditBin = path.resolve(__dirname, '..', '..', 'sdedit-bin');
 
             const sut = new SdEditDownloader(false, log);
             sut.update();
 
-            expect(existsSyncStub).calledWith(sdeditBin);
-            expect(mkdirSyncStub).calledWith(sdeditBin);
+            expect(testHelper.existsSyncStub).calledWith(sdeditBin);
+            expect(testHelper.mkdirSyncStub).calledWith(sdeditBin);
         });
 
         it('should skip download if the file already exists', () => {
-            existsSyncStub.returns(false);
-            statSyncStub.returns({ size: 1 } as unknown as fs.Stats);
+            testHelper.existsSyncStub.returns(false);
+            testHelper.statSyncStub.returns({ size: 1 } as unknown as fs.Stats);
             const sdeditJar = path.resolve(__dirname, '..', '..', 'sdedit-bin', 'sdedit.jar');
 
             const sut = new SdEditDownloader(false, log);
             sut.update();
             expect(log).calledWith(`[sdedit] File exists, update skipped: ${sdeditJar}. Use -f to override.`);
-            expect(statSyncStub).calledWith(sdeditJar);
+            expect(testHelper.statSyncStub).calledWith(sdeditJar);
         });
 
         it('should download if file is absent', async () => {
-            statSyncStub.throws();
+            testHelper.statSyncStub.throws();
             const sut = new SdEditDownloader(false, log);
-            streamToPromiseStub.resolves();
+            testHelper.streamToPromiseStub.resolves();
             await sut.update();
             const url = 'https://github.com/sdedit/sdedit/releases/download/v4.2-beta9/sdedit-4.2-beta9.jar';
             expect(log).calledWith(`[sdedit] Downloading from ${url}...`);
-            expect(gotStreamStub).calledWith(url);
-            expect(createWriteStream).calledWith(path.resolve(__dirname, '..', '..', 'sdedit-bin', 'sdedit.jar'));
-            expect(streamToPromiseStub).calledWith('expected piped value');
+            expect(testHelper.gotStreamStub).calledWith(url);
+            expect(testHelper.createWriteStream).calledWith(path.resolve(__dirname, '..', '..', 'sdedit-bin', 'sdedit.jar'));
+            expect(testHelper.streamToPromiseStub).calledWith('expected piped value');
         });
 
         it('should reject if download rejects', async () => {
-            statSyncStub.throws();
+            testHelper.statSyncStub.throws();
             const sut = new SdEditDownloader(false, log);
-            streamToPromiseStub.rejects('download failed');
+            testHelper.streamToPromiseStub.rejects('download failed');
             let caught = false;
             try {
                 await sut.update();
@@ -87,21 +84,21 @@ describe('SdEditDownloader', () => {
         });
 
         it('should download if file is there but is 0 bytes', async () => {
-            statSyncStub.returns({ size: 0 } as unknown as fs.Stats);
-            streamToPromiseStub.resolves();
+            testHelper.statSyncStub.returns({ size: 0 } as unknown as fs.Stats);
+            testHelper.streamToPromiseStub.resolves();
             const sut = new SdEditDownloader(false, log);
             await sut.update();
-            expect(gotStreamStub).called;
+            expect(testHelper.gotStreamStub).called;
         });
 
         it('should download if file is there, but force = true', async () => {
-            existsSyncStub.returns(false);
-            statSyncStub.returns({ size: 1 } as unknown as fs.Stats);
-            streamToPromiseStub.resolves();
+            testHelper.existsSyncStub.returns(false);
+            testHelper.statSyncStub.returns({ size: 1 } as unknown as fs.Stats);
+            testHelper.streamToPromiseStub.resolves();
             const sut = new SdEditDownloader(true, log);
             await sut.update();
             expect(log).calledWith('[sdedit] Forcing update');
-            expect(gotStreamStub).called;
+            expect(testHelper.gotStreamStub).called;
         });
     });
 
