@@ -65,6 +65,6 @@
   "dependencies": {
     "download": "^7.1.0",
     "end-of-stream": "^1.4.1",
-    "got": "^9.6.0"
+    "got": "^11.8.5"
   }
 }
